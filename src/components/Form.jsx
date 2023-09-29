@@ -1,20 +1,39 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { states } from '../model/state'
+import SuccessModal from './SuccessModal';
+import Modal from 'react-modal';
 
 const EmployeeForm = () => {
+    const appElement = document.getElementById('root'); // Assurez-vous que l'id correspond à votre élément de l'application
+
+// Définissez l'élément de l'application pour react-modal
+Modal.setAppElement(appElement);
     const [employeeData, setEmployeeData] = useState({
         firstName: '',
         lastName: '',
-        dateOfBirth: '',
-        startDate: '',
+        dateOfBirth: null,
+        startDate: null,
         street: '',
         city: '',
         state: '',
         zipCode: '',
         department: 'Sales',
-    });
+      });
+    
+      const [employees, setEmployees] = useState([]);
+
+      const [isModalOpen, setIsModalOpen] = useState(false);
+
+      useEffect(() => {
+        // Retrieve employee data from local storage on component mount
+        const storedData = localStorage.getItem('employees');
+        if (storedData) {
+          const parsedData = JSON.parse(storedData);
+          setEmployees(parsedData);
+        }
+      }, []);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -26,8 +45,32 @@ const EmployeeForm = () => {
     };
 
     const handleSave = () => {
-        localStorage.setItem('employeeData', JSON.stringify(employeeData));
-    };
+        // Create a new employee object with the current employee data
+        const newEmployee = { ...employeeData };
+    
+        // Add the new employee to the list of employees
+        const updatedEmployees = [...employees, newEmployee];
+        setEmployees(updatedEmployees);
+    
+        // Save the updated list of employees to local storage
+        localStorage.setItem('employees', JSON.stringify(updatedEmployees));
+
+        // OpenModal
+        setIsModalOpen(true);
+    
+        // Optionally, clear the form fields
+        setEmployeeData({
+          firstName: '',
+          lastName: '',
+          dateOfBirth: '',
+          startDate: '',
+          street: '',
+          city: '',
+          state: '',
+          zipCode: '',
+          department: 'Sales',
+        });
+      };
 
     return (
         <div className='all-form'>
@@ -131,7 +174,9 @@ const EmployeeForm = () => {
             </form>
 
             <button onClick={handleSave} className='button-save'>Save</button>
+            <SuccessModal isOpen={isModalOpen} onRequestClose={() => setIsModalOpen(false)} />
         </div>
+        
     );
 };
 

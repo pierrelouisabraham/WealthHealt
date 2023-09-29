@@ -1,7 +1,7 @@
 
-import './App.css';
-import EmployeeForm from './components/Form';
-import Header from './components/Header';
+import '../styles/App.scss';
+import EmployeeForm from '../components/Form';
+import Header from '../components/Header';
 
 function App() {
   return (
