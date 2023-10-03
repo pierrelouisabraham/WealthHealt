@@ -4,10 +4,14 @@ import 'react-datepicker/dist/react-datepicker.css';
 import { states } from '../model/state'
 import SuccessModal from './SuccessModal';
 import Modal from 'react-modal';
+import { useDispatch, useSelector } from 'react-redux';
+import { addEmployee }   from '../model/employeeSlice';
 
 const EmployeeForm = () => {
     const appElement = document.getElementById('root'); // Assurez-vous que l'id correspond à votre élément de l'application
 
+  
+    
 // Définissez l'élément de l'application pour react-modal
 Modal.setAppElement(appElement);
     const [employeeData, setEmployeeData] = useState({
@@ -22,18 +26,13 @@ Modal.setAppElement(appElement);
         department: 'Sales',
       });
     
-      const [employees, setEmployees] = useState([]);
+      var [employees, setEmployees] = useState([]);
 
       const [isModalOpen, setIsModalOpen] = useState(false);
+      employees = useSelector((state) => state.employees);
 
-      useEffect(() => {
-        // Retrieve employee data from local storage on component mount
-        const storedData = localStorage.getItem('employees');
-        if (storedData) {
-          const parsedData = JSON.parse(storedData);
-          setEmployees(parsedData);
-        }
-      }, []);
+    const dispatch = useDispatch();
+   
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -41,22 +40,27 @@ Modal.setAppElement(appElement);
     };
 
     const handleDateChange = (date, field) => {
-        setEmployeeData({ ...employeeData, [field]: date });
+        
+        
+        setEmployeeData({ ...employeeData, [field]: date   });
     };
 
     const handleSave = () => {
-        // Create a new employee object with the current employee data
-        const newEmployee = { ...employeeData };
-    
-        // Add the new employee to the list of employees
-        const updatedEmployees = [...employees, newEmployee];
-        setEmployees(updatedEmployees);
-    
-        // Save the updated list of employees to local storage
-        localStorage.setItem('employees', JSON.stringify(updatedEmployees));
+// Create a new employee object with the current employee data
+const newEmployee = { ...employeeData };
 
-        // OpenModal
-        setIsModalOpen(true);
+// Convert date fields to strings
+newEmployee.dateOfBirth = newEmployee.dateOfBirth.toLocaleDateString();
+newEmployee.startDate = newEmployee.startDate.toLocaleDateString();
+
+// Add the new employee to the list of employees
+const updatedEmployees = [...employees, newEmployee];
+
+// Save the updated list of employees to local storage
+dispatch(addEmployee(newEmployee));
+
+// Open the modal
+setIsModalOpen(true);
     
         // Optionally, clear the form fields
         setEmployeeData({
