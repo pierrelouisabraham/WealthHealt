@@ -12,7 +12,7 @@ const Header = () => {
     return (
         <div className="header">
             <Link id='title' to={'/'}>HRnet</Link>
-            <Link className="icones" to={'Employee-List'}>
+            <Link className="icones" to={'/Employee-List'}>
                 <FontAwesomeIcon icon="fa-solid fa-address-book" size="2x" />
             </Link>
         </div>
