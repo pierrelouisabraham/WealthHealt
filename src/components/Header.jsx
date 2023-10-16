@@ -14,6 +14,7 @@ const Header = () => {
             <Link id='title' to={'/'}>HRnet</Link>
             <Link className="icones" to={'/Employee-List'}>
                 <FontAwesomeIcon icon="fa-solid fa-address-book" size="2x" />
+                <span>Liste des employées</span>
             </Link>
         </div>
     );

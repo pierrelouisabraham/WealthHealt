@@ -6,6 +6,7 @@ import SuccessModal from './SuccessModal';
 import Modal from 'react-modal';
 import { useDispatch, useSelector } from 'react-redux';
 import { addEmployee }   from '../model/employeeSlice';
+import { testData } from '../model/fillEmployee';
 
 const EmployeeForm = () => {
     const appElement = document.getElementById('root'); // Assurez-vous que l'id correspond à votre élément de l'application
@@ -25,14 +26,15 @@ Modal.setAppElement(appElement);
         zipCode: '',
         department: 'Sales',
       });
-    
+  
+      useDispatch()
       var [employees, setEmployees] = useState([]);
 
       const [isModalOpen, setIsModalOpen] = useState(false);
       employees = useSelector((state) => state.employees);
 
     const dispatch = useDispatch();
-   
+
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -50,12 +52,22 @@ Modal.setAppElement(appElement);
 const newEmployee = { ...employeeData };
 
 // Convert date fields to strings
-newEmployee.dateOfBirth = newEmployee.dateOfBirth.toLocaleDateString();
-newEmployee.startDate = newEmployee.startDate.toLocaleDateString();
+if(!newEmployee.dateOfBirth || !newEmployee.startDate){
+    newEmployee.dateOfBirth = '';
+    newEmployee.startDate = '';
+} else {
+    newEmployee.dateOfBirth = newEmployee.dateOfBirth.toLocaleDateString();
+    newEmployee.startDate = newEmployee.startDate.toLocaleDateString();
+    
+}
 
 // Add the new employee to the list of employees
 const updatedEmployees = [...employees, newEmployee];
 
+for(let i= 0; i < testData.length; i++) {
+    console.log(testData[i])
+    dispatch(addEmployee(testData[i]))
+  }
 // Save the updated list of employees to local storage
 dispatch(addEmployee(newEmployee));
 
@@ -76,6 +88,7 @@ setIsModalOpen(true);
         });
       };
 
+
     return (
         <div className='all-form'>
             <form id="create-employee">
@@ -86,6 +99,7 @@ setIsModalOpen(true);
                     name="firstName"
                     value={employeeData.firstName}
                     onChange={handleChange}
+                    required
                 />
 
                 <label htmlFor="last-name">Last Name</label>
@@ -95,6 +109,7 @@ setIsModalOpen(true);
                     name="lastName"
                     value={employeeData.lastName}
                     onChange={handleChange}
+                    required
                 />
 
                 <label htmlFor="date-of-birth">Date of Birth</label>
@@ -104,6 +119,7 @@ setIsModalOpen(true);
                     selected={employeeData.dateOfBirth}
                     onChange={(date) => handleDateChange(date, 'dateOfBirth')}
                     dateFormat="MM/dd/yyyy"
+                    required
                 />
 
                 <label htmlFor="start-date">Start Date</label>
@@ -113,6 +129,7 @@ setIsModalOpen(true);
                     selected={employeeData.startDate}
                     onChange={(date) => handleDateChange(date, 'startDate')}
                     dateFormat="MM/dd/yyyy"
+                    required
                 />
 
                 <fieldset className="address">
@@ -125,6 +142,7 @@ setIsModalOpen(true);
                         name="street"
                         value={employeeData.street}
                         onChange={handleChange}
+                        required
                     />
 
                     <label htmlFor="city">City</label>
@@ -134,6 +152,7 @@ setIsModalOpen(true);
                         name="city"
                         value={employeeData.city}
                         onChange={handleChange}
+                        required
                     />
 
                     <label htmlFor="state">State</label>
@@ -142,6 +161,7 @@ setIsModalOpen(true);
                         id="state"
                         value={employeeData.state}
                         onChange={handleChange}
+                        required
                     >
                    <option value="">Select a state</option>
                     {states.map((state) => (
@@ -168,7 +188,7 @@ setIsModalOpen(true);
                     id="department"
                     value={employeeData.department}
                     onChange={handleChange}
-                >
+                required>
                     <option>Sales</option>
                     <option>Marketing</option>
                     <option>Engineering</option>
