@@ -7,11 +7,9 @@ import { Button, Input, Space, Table } from 'antd';
 function EmployeeDataTable() {
   // Retrieve the employees data from Redux store
   const employees = useSelector((state) => state.employees);
-
   const [searchText, setSearchText] = useState('');
   const [searchedColumn, setSearchedColumn] = useState('');
   const searchInput = useRef(null);
- 
   const [Data, setData] = useState(employees)
 
   const handleSearch = (selectedKeys, confirm, dataIndex) => {
@@ -96,7 +94,7 @@ function EmployeeDataTable() {
       />
     ),
     onFilter: (value, record) =>
-      record[dataIndex].toString().toLowerCase().includes(value.toLowerCase()),
+      (record[dataIndex]?.toString() || '').toLowerCase().includes(value.toLowerCase()),
     onFilterDropdownOpenChange: (visible) => {
       if (visible) {
         setTimeout(() => searchInput.current?.select(), 100);
@@ -135,7 +133,7 @@ function EmployeeDataTable() {
       title: 'Department',
       dataIndex: 'department',
       key: 'department',
-      ...getColumnSearchProps('departement'),
+      ...getColumnSearchProps('department'),
       sorter: (a, b) => a.department.length - b.department.length,
       sortDirections: ['descend', 'ascend'],
     },
@@ -176,33 +174,20 @@ function EmployeeDataTable() {
       title: 'Zip Code',
       dataIndex: 'zipCode',
       key: 'zipCode',
-      ...getColumnSearchProps('city'),
+      ...getColumnSearchProps('zipCode'),
       sorter: (a, b) => a.zipCode.length - b.zipCode.length,
       sortDirections: ['descend', 'ascend'],
     },
   ];
-
-   
-   
-
-
-
  
   const onChange = (pagination, filters, sorter, extra) => {
- 
-  
-  
     console.log('params', pagination, filters, sorter, extra);
   };
-
- 
-
 
   return (
     <>
       <Header />
       <Table dataSource={Data} columns={columns} onChange={onChange}      pagination={{
-       
         showSizeChanger: true, // Activez la fonctionnalité de changement de taille
         pageSizeOptions: ['10', '20', '50'], // Options de taille de page
         defaultPageSize: 10, // Taille de page par défaut

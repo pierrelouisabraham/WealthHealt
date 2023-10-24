@@ -1,20 +1,16 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-import { states } from '../model/state'
-import SuccessModal from './SuccessModal';
-import Modal from 'react-modal';
+import { states } from '../model/state';
 import { useDispatch, useSelector } from 'react-redux';
 import { addEmployee }   from '../model/employeeSlice';
-import { testData } from '../model/fillEmployee';
+/* import { testData } from '../model/fillEmployee'; */
+import MyModal from 'pa-react-modal';
 
 const EmployeeForm = () => {
-    const appElement = document.getElementById('root'); // Assurez-vous que l'id correspond à votre élément de l'application
-
-  
-    
-// Définissez l'élément de l'application pour react-modal
-Modal.setAppElement(appElement);
+   
+    const dispatch = useDispatch();
+    const [isOpen, setIsOpen] = useState(false);
     const [employeeData, setEmployeeData] = useState({
         firstName: '',
         lastName: '',
@@ -26,15 +22,9 @@ Modal.setAppElement(appElement);
         zipCode: '',
         department: 'Sales',
       });
-  
+
       useDispatch()
-      var [employees, setEmployees] = useState([]);
-
-      const [isModalOpen, setIsModalOpen] = useState(false);
-      employees = useSelector((state) => state.employees);
-
-    const dispatch = useDispatch();
-
+      useSelector((state) => state.employees);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -42,37 +32,31 @@ Modal.setAppElement(appElement);
     };
 
     const handleDateChange = (date, field) => {
-        
-        
         setEmployeeData({ ...employeeData, [field]: date   });
     };
 
     const handleSave = () => {
-// Create a new employee object with the current employee data
-const newEmployee = { ...employeeData };
+    // Create a new employee object with the current employee data
+    const newEmployee = { ...employeeData };
 
-// Convert date fields to strings
-if(!newEmployee.dateOfBirth || !newEmployee.startDate){
-    newEmployee.dateOfBirth = '';
-    newEmployee.startDate = '';
-} else {
-    newEmployee.dateOfBirth = newEmployee.dateOfBirth.toLocaleDateString();
-    newEmployee.startDate = newEmployee.startDate.toLocaleDateString();
-    
-}
+    // Convert date fields to strings
+    if(!newEmployee.dateOfBirth || !newEmployee.startDate){
+        newEmployee.dateOfBirth = '';
+        newEmployee.startDate = '';
+    } else {
+        newEmployee.dateOfBirth = newEmployee.dateOfBirth.toLocaleDateString();
+        newEmployee.startDate = newEmployee.startDate.toLocaleDateString();   
+    }
 
-// Add the new employee to the list of employees
-const updatedEmployees = [...employees, newEmployee];
+    //add employees to display features in code
+    /* for(let i= 0; i < testData.length; i++) 
+        dispatch(addEmployee(testData[i]))
+    } */
+    // Save the updated list of employees to local storage
+    dispatch(addEmployee(newEmployee));
 
-for(let i= 0; i < testData.length; i++) {
-    console.log(testData[i])
-    dispatch(addEmployee(testData[i]))
-  }
-// Save the updated list of employees to local storage
-dispatch(addEmployee(newEmployee));
-
-// Open the modal
-setIsModalOpen(true);
+    // Open the modal
+    setIsOpen(true);
     
         // Optionally, clear the form fields
         setEmployeeData({
@@ -198,7 +182,10 @@ setIsModalOpen(true);
             </form>
 
             <button onClick={handleSave} className='button-save'>Save</button>
-            <SuccessModal isOpen={isModalOpen} onRequestClose={() => setIsModalOpen(false)} />
+            <MyModal isOpen={isOpen} onClose={() => setIsOpen(false)}>
+            <h1>L'employé a bien été ajouté</h1>
+            <p>Vous pouvez cliquer sur la croix pour quitter cette fenêtre</p>
+            </MyModal>
         </div>
         
     );

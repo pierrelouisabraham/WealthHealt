@@ -1,17 +1,18 @@
 import React from 'react';
-import Modal from 'react-modal';
+import Modal from 'pa-react-modal';
+import { useState } from 'react'
 
-const SuccessModal = ({ isOpen, onRequestClose }) => {
+const SuccessModal = () => {
+  const [isOpen, setIsOpen] = useState(false);
+
   return (
-    <Modal
-      isOpen={isOpen}
-      onRequestClose={onRequestClose}
-      contentLabel="Success Modal"
-    >
-      <h2>Enregistrement réussi</h2>
-      <p>Votre employé a été enregistré avec succès.</p>
-      <button onClick={onRequestClose}>Fermer</button>
-    </Modal>
+    <div>
+      <button onClick={() => setIsOpen(true)}>Open Modal</button>
+      <Modal isOpen={isOpen} onClose={() => setIsOpen(false)}>
+        <h1>My Modal Content</h1>
+        <p>Vous pouvez cliquer sur la croix</p>
+      </Modal>
+    </div>
   );
 };
 
