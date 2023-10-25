@@ -1,19 +1,15 @@
 import React from "react";
 import "../styles/header.scss"
-import { library } from '@fortawesome/fontawesome-svg-core'
-import { faAddressBook} from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Link } from "react-router-dom";
+import AdressIcon from '../ressources/address-book-regular.svg'
 
 const Header = () => {
-  
-    library.add(faAddressBook);
-   
     return (
         <div className="header">
             <Link id='title' to={'/'}>HRnet</Link>
             <Link className="icones" to={'/Employee-List'}>
-                <FontAwesomeIcon icon="fa-solid fa-address-book" size="2x" />
+          
+                <img src={AdressIcon} alt="EmployeeList"></img>
                 <span>Liste des employées</span>
             </Link>
         </div>

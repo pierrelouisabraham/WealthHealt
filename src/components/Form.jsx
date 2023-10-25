@@ -4,7 +4,7 @@ import 'react-datepicker/dist/react-datepicker.css';
 import { states } from '../model/state';
 import { useDispatch, useSelector } from 'react-redux';
 import { addEmployee }   from '../model/employeeSlice';
-/* import { testData } from '../model/fillEmployee'; */
+import { testData } from '../model/fillEmployee';
 import MyModal from 'pa-react-modal';
 
 const EmployeeForm = () => {
@@ -49,9 +49,9 @@ const EmployeeForm = () => {
     }
 
     //add employees to display features in code
-    /* for(let i= 0; i < testData.length; i++) 
-        dispatch(addEmployee(testData[i]))
-    } */
+    for(let i= 0; i < testData.length; i++) {
+    dispatch(addEmployee(testData[i]))
+    }
     // Save the updated list of employees to local storage
     dispatch(addEmployee(newEmployee));
 
@@ -128,7 +128,6 @@ const EmployeeForm = () => {
                         onChange={handleChange}
                         required
                     />
-
                     <label htmlFor="city">City</label>
                     <input
                         id="city"
@@ -180,14 +179,12 @@ const EmployeeForm = () => {
                     <option>Legal</option>
                 </select>
             </form>
-
             <button onClick={handleSave} className='button-save'>Save</button>
             <MyModal isOpen={isOpen} onClose={() => setIsOpen(false)}>
             <h1>L'employé a bien été ajouté</h1>
             <p>Vous pouvez cliquer sur la croix pour quitter cette fenêtre</p>
             </MyModal>
-        </div>
-        
+        </div>   
     );
 };
 
